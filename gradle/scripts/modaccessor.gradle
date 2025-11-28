@@ -1,4 +1,4 @@
 modAccessor {
     createTransformConfiguration(configurations.compileOnly)
-    accessTransformerFiles = project.files('src/main/templates/META-INF/accesstransformer.cfg')
+    accessTransformerFiles = project.files('src/main/resources/META-INF/accesstransformer.cfg')
 }

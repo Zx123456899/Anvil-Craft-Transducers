@@ -1,5 +1,6 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin;
 
+import dev.anvilcraft.anvilcrafttransducers.AnvilCraftTransducers;
 import dev.anvilcraft.anvilcrafttransducers.api.anvilcraft.IPowerGrid;
 import dev.anvilcraft.anvilcrafttransducers.api.mekanism.ICachedRecipe;
 import dev.anvilcraft.anvilcrafttransducers.api.mekanism.IMekPowerConsumer;
@@ -85,10 +86,6 @@ public abstract class CachedRecipeMixin<RECIPE extends MekanismRecipe<?>> implem
      * {@link #storedEnergy}始终返回{@link  Long#MAX_VALUE}，由{@link PowerGrid#isWorking}来控制设备的运行<br>
      * {@link #useEnergy}的实现逻辑由{@link PowerGrid#flush} 通过{@link #getInputPower}自动计算
      * </p>
-     *
-     * <p>
-     * TODO 将转换率写入配置，目前为10:1
-     * </p>
      */
     @Inject(
             method = "setEnergyRequirements",
@@ -100,7 +97,7 @@ public abstract class CachedRecipeMixin<RECIPE extends MekanismRecipe<?>> implem
                         && ((MachineEnergyContainerAccessor<?>) energyContainer).getTile() instanceof IPowerConsumer powerConsumer
                         && powerConsumer.getGrid() != null
         ) {
-            this.perTickEnergy = () -> machineEnergyContainer.getEnergyPerTick() / 10;
+            this.perTickEnergy = () -> machineEnergyContainer.getEnergyPerTick() / AnvilCraftTransducers.CONFIG.transducers;
             this.storedEnergy = () -> Long.MAX_VALUE;
             this.useEnergy = energy -> {
             };

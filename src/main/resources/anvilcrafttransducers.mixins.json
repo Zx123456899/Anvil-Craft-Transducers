@@ -9,6 +9,7 @@
     "MachineEnergyContainerAccessor",
     "PowerGridMixin",
     "RecipeCacheLookupMonitorMixin",
+    "TileEntityElectricPumpMixin",
     "TileEntityFactoryMixin",
     "TileEntityFusionReactorBlockMixin",
     "TileEntityGeneratorMixin",
@@ -18,6 +19,7 @@
     "TileEntityTurbineCasingMixin"
   ],
   "client": [
+    "GuiElectricPumpMixin"
   ],
   "injectors": {
     "defaultRequire": 1

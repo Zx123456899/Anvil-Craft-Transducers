@@ -5,7 +5,6 @@ import dev.anvilcraft.anvilcrafttransducers.AddonConfig;
 import dev.anvilcraft.lib.config.ConfigData;
 
 public class LangHandler {
-
     /**
      * 语言文件初始化
      *

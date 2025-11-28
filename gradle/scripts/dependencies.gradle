@@ -25,6 +25,7 @@ dependencies {
     implementation(libs.patchouli)
 
     // Mekanism
-    implementation ("mekanism:Mekanism:${mekanism_version}")
-    implementation ("mekanism:Mekanism:${mekanism_version}:generators")
+    runtimeOnly("mekanism:Mekanism:${mekanism_version}") { transitive = false }
+    implementation("mekanism:Mekanism:${mekanism_version}:generators") { transitive = false }
+    accessCompileOnly(("mekanism:Mekanism:${mekanism_version}"))
 }

@@ -1,18 +1,10 @@
 package dev.anvilcraft.anvilcrafttransducers;
 
-import dev.anvilcraft.lib.config.BoundedDiscrete;
 import dev.anvilcraft.lib.config.Comment;
 import dev.anvilcraft.lib.config.Config;
 
 @Config(name = AnvilCraftTransducers.MOD_ID)
 public class AddonConfig {
-    @Comment("Whether to log the dirt block on common setup")
-    public boolean logDirtBlock = false;
-
-    @Comment("A magic number")
-    @BoundedDiscrete(max = 24, min = 2)
-    public int magicNumber = 2;
-
-    @Comment("What you want the introduction message to be for the magic number")
-    public String magicNumberIntroduction = "";
+    @Comment("1kW = ?MJ")
+    public int transducers = 10;
 }
