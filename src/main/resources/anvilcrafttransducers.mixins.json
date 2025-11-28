@@ -1,0 +1,28 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.anvilcraft.anvilcrafttransducers.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "BasicEnergyContainerMixin",
+    "CachedRecipeMixin",
+    "MachineEnergyContainerAccessor",
+    "PowerGridMixin",
+    "RecipeCacheLookupMonitorMixin",
+    "TileEntityFactoryMixin",
+    "TileEntityFusionReactorBlockMixin",
+    "TileEntityGeneratorMixin",
+    "TileEntityHeatGeneratorMixin",
+    "TileEntityRecipeMachineMixin",
+    "TileEntityTeleporterMixin",
+    "TileEntityTurbineCasingMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}

@@ -8,6 +8,8 @@ neoForge {
 
     var isJbr = System.getProperty('java.vm.vendor').contains('JetBrains')
 
+    accessTransformers.from 'src/main/templates/META-INF/accesstransformer.cfg'
+
     runs {
         client {
             client()

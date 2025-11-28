@@ -23,4 +23,8 @@ dependencies {
 
     // Patchouli
     implementation(libs.patchouli)
+
+    // Mekanism
+    implementation ("mekanism:Mekanism:${mekanism_version}")
+    implementation ("mekanism:Mekanism:${mekanism_version}:generators")
 }
