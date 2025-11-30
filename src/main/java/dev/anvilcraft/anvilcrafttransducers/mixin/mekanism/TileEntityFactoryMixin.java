@@ -1,4 +1,4 @@
-package dev.anvilcraft.anvilcrafttransducers.mixin;
+package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
 
 import dev.anvilcraft.anvilcrafttransducers.api.mekanism.IMekPowerConsumer;
@@ -51,6 +51,7 @@ public abstract class TileEntityFactoryMixin<RECIPE extends MekanismRecipe<?>> e
 
     @Override
     public int getInputPower() {
+        if (!canFunction()) return 0;
         int inputPower = 0;
         for (int i = 0; i < recipeCacheLookupMonitors.length; i++) {
             FactoryRecipeCacheLookupMonitor<RECIPE> lookupMonitor = recipeCacheLookupMonitors[i];

@@ -1,4 +1,4 @@
-package dev.anvilcraft.anvilcrafttransducers.mixin;
+package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.anvilcraft.anvilcrafttransducers.AnvilCraftTransducers;
@@ -43,7 +43,7 @@ public abstract class TileEntityTeleporterMixin extends TileEntityMekanism imple
     @Unique
     private int inputPower = 0;
     @Unique
-    private int oldInputPower = 0;
+    private boolean changePower = false;
 
     public TileEntityTeleporterMixin(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state);
@@ -85,8 +85,8 @@ public abstract class TileEntityTeleporterMixin extends TileEntityMekanism imple
     @Override
     public int getInputPower() {
         // 当电网调用此方法时，代表着电网正在更新
-        // 缓存用电量防止重复计算
-        oldInputPower = inputPower;
+        // 设置标记防止重复计算
+        changePower = inputPower > 0;
         return inputPower;
     }
 
@@ -99,8 +99,8 @@ public abstract class TileEntityTeleporterMixin extends TileEntityMekanism imple
             )
     )
     public void anvilCraftTransducers$setShouldRender(TileEntityTeleporter instance, boolean value) {
-        // 当状态是无能量或者就绪是，传送门的渲染转为由电网是否过载控制
-        // 此视觉效果会有一定的延迟，不知道大部分玩家是否接受
+        // 当状态是无能量或者就绪时，传送门的渲染转为由电网是否过载控制
+        // 此功能会导致视觉效果延迟，不知道大部分玩家是否接受
         // 后续可能会考虑删除
         instance.shouldRender = (status == TeleporterStatus.NOT_ENOUGH_ENERGY || status == TeleporterStatus.READY) ? grid.isWorking() : value;
     }
@@ -119,12 +119,11 @@ public abstract class TileEntityTeleporterMixin extends TileEntityMekanism imple
         if (
                 !powerGrid.canChange() && grid.isWorking()
                         // 在电网过载时，传送门作为电网组件本身会被计算在总耗能中
-                        // 若后续电网恢复工作，常规检测就会重复计算能耗，所以此处应当额外检测缓存防止重复检测
-                        && (grid.getRemaining() >= inputPower || oldInputPower > 0)
+                        // 若后续电网恢复工作，常规检测就会重复计算能耗，所以此处应当检测检标记防止重复计算
+                        && (grid.getRemaining() >= inputPower || changePower)
         ) {
-            oldInputPower = 0;
+            changePower = false;
             cir.setReturnValue(new TeleportInfo(TeleporterStatus.READY, closestCoords, toTeleport));
         }
     }
-
 }

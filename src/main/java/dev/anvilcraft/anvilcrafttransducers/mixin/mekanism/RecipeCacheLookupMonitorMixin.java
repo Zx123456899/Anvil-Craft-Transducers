@@ -1,4 +1,4 @@
-package dev.anvilcraft.anvilcrafttransducers.mixin;
+package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
 import dev.anvilcraft.anvilcrafttransducers.api.anvilcraft.IPowerGrid;
 import dev.anvilcraft.anvilcrafttransducers.api.mekanism.ICachedRecipe;
@@ -31,7 +31,7 @@ public class RecipeCacheLookupMonitorMixin<RECIPE extends MekanismRecipe<?>> {
      * </p>
      *
      * <p>
-     * 这代表着配方变动，需要重新计算电力消耗
+     * 这代表配方变动，需要重新计算电力消耗
      * </p>
      */
     @Inject(

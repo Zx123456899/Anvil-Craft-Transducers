@@ -1,4 +1,4 @@
-package dev.anvilcraft.anvilcrafttransducers.mixin;
+package dev.anvilcraft.anvilcrafttransducers.mixin.anvilcraft;
 
 import dev.anvilcraft.anvilcrafttransducers.api.anvilcraft.IPowerGrid;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;

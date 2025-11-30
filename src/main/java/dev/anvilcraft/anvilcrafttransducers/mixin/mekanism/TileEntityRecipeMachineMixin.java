@@ -1,4 +1,4 @@
-package dev.anvilcraft.anvilcrafttransducers.mixin;
+package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
 import dev.anvilcraft.anvilcrafttransducers.api.mekanism.IMekPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.Unique;
  * <p>
  * 为绝大多数的耗能设备实现IPowerConsumer，并入铁砧工艺的电网组件
  * </p>
- *
+ * <p>
  * 但其中有一个例外<太阳能中子活化器>，但无大碍，就不单独兼容了
  */
 @Mixin(TileEntityRecipeMachine.class)
@@ -58,7 +58,8 @@ public abstract class TileEntityRecipeMachineMixin<RECIPE extends MekanismRecipe
     @Override
     public int getInputPower() {
         if (
-                recipeCacheLookupMonitor.getCachedRecipe(0) instanceof IMekPowerConsumer mekPowerConsumer
+                canFunction()
+                        && recipeCacheLookupMonitor.getCachedRecipe(0) instanceof IMekPowerConsumer mekPowerConsumer
                         && !recipeCacheLookupMonitor.hasNoRecipe(0)
         ) {
             return mekPowerConsumer.getInputPower();

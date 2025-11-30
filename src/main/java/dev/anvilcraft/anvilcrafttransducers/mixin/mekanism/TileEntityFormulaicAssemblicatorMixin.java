@@ -1,11 +1,12 @@
-package dev.anvilcraft.anvilcrafttransducers.mixin;
+package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
 import dev.anvilcraft.anvilcrafttransducers.AnvilCraftTransducers;
-import dev.anvilcraft.anvilcrafttransducers.api.anvilcraft.IPowerGrid;
+import dev.anvilcraft.anvilcrafttransducers.util.MekPowerConsumerUtils;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
-import mekanism.common.tile.base.TileEntityMekanism;
-import mekanism.common.tile.machine.TileEntityElectricPump;
+import mekanism.common.tile.machine.TileEntityFluidicPlenisher;
+import mekanism.common.tile.machine.TileEntityFormulaicAssemblicator;
+import mekanism.common.tile.prefab.TileEntityConfigurableMachine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.Level;
@@ -17,11 +18,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(TileEntityElectricPump.class)
-public class TileEntityElectricPumpMixin extends TileEntityMekanism implements IPowerConsumer {
+@Mixin(TileEntityFormulaicAssemblicator.class)
+public abstract class TileEntityFormulaicAssemblicatorMixin extends TileEntityConfigurableMachine implements IPowerConsumer {
     @Shadow
     private boolean usedEnergy;
     @Unique
@@ -32,7 +35,7 @@ public class TileEntityElectricPumpMixin extends TileEntityMekanism implements I
     @Unique
     private int inputPower = 0;
 
-    public TileEntityElectricPumpMixin(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
+    public TileEntityFormulaicAssemblicatorMixin(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state);
     }
 
@@ -61,9 +64,6 @@ public class TileEntityElectricPumpMixin extends TileEntityMekanism implements I
         return inputPower;
     }
 
-    /**
-     * 转换能量消耗为kW
-     */
     @ModifyVariable(
             method = "onUpdateServer",
             at = @At("STORE"),
@@ -71,27 +71,30 @@ public class TileEntityElectricPumpMixin extends TileEntityMekanism implements I
     )
     public long anvilCraftTransducers$setEnergyPerTick(long value) {
         inputPower = (int) (value / AnvilCraftTransducers.CONFIG.transducers);
-        if (!grid.isWorking()
-                || grid instanceof IPowerGrid powerGrid && powerGrid.canChange()
-        ) {
-            usedEnergy = false;
-            // 机器内部没有能量，返回1让检测失败
-            return 1;
+        long energyPerTick = MekPowerConsumerUtils.getEnergyPerTick(grid);
+        usedEnergy = energyPerTick == 0;
+        return energyPerTick;
+    }
+
+    @Inject(
+            method = "onUpdateServer",
+            at = @At("HEAD")
+    )
+    public void anvilCraftTransducers$onUpdateServer(CallbackInfoReturnable<Boolean> cir) {
+        if (!canFunction()) {
+            inputPower = 0;
         }
-        usedEnergy = true;
-        // 机器内部没有能量，返回0让检测通过
-        return 0;
     }
 
     @Redirect(
             method = "onUpdateServer",
             at = @At(
                     value = "FIELD",
-                    target = "Lmekanism/common/tile/machine/TileEntityElectricPump;usedEnergy:Z",
+                    target = "Lmekanism/common/tile/machine/TileEntityFormulaicAssemblicator;usedEnergy:Z",
                     opcode = Opcodes.PUTFIELD
             )
     )
-    public void anvilCraftTransducers$setUsedEnergy(TileEntityElectricPump instance, boolean value) {
-        // 取消此处的赋值，逻辑转移上放的方法中
+    public void anvilCraftTransducers$setUsedEnergy(TileEntityFormulaicAssemblicator instance, boolean value) {
+        // 取消此处的赋值，逻辑转移上方的方法中
     }
 }

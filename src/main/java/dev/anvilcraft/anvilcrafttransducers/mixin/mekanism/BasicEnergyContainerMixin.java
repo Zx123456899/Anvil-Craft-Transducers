@@ -1,4 +1,4 @@
-package dev.anvilcraft.anvilcrafttransducers.mixin;
+package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
 import dev.anvilcraft.anvilcrafttransducers.AnvilCraftTransducers;
 import dev.anvilcraft.anvilcrafttransducers.api.mekanism.IMekPowerProducer;
