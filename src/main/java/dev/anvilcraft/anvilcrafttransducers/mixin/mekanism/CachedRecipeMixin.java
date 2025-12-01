@@ -1,7 +1,6 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
 import dev.anvilcraft.anvilcrafttransducers.AnvilCraftTransducers;
-import dev.anvilcraft.anvilcrafttransducers.api.anvilcraft.IPowerGrid;
 import dev.anvilcraft.anvilcrafttransducers.api.mekanism.ICachedRecipe;
 import dev.anvilcraft.anvilcrafttransducers.api.mekanism.IMekPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
@@ -10,20 +9,17 @@ import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import mekanism.api.energy.IEnergyContainer;
 import mekanism.api.recipes.MekanismRecipe;
 import mekanism.api.recipes.cache.CachedRecipe;
-import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.function.IntConsumer;
 import java.util.function.LongConsumer;
 import java.util.function.LongSupplier;
-import java.util.function.Supplier;
 
 @Mixin(CachedRecipe.class)
 public abstract class CachedRecipeMixin<RECIPE extends MekanismRecipe<?>> implements ICachedRecipe, IMekPowerConsumer {
@@ -39,11 +35,6 @@ public abstract class CachedRecipeMixin<RECIPE extends MekanismRecipe<?>> implem
     private int operatingTicks;
     @Shadow
     private IntConsumer operatingTicksChanged;
-    /**
-     * 电网提供者
-     */
-    @Unique
-    private Supplier<PowerGrid> gridSupplier;
 
     @Shadow
     protected abstract void updateErrors(Set<CachedRecipe.OperationTracker.RecipeError> errors);
@@ -53,13 +44,19 @@ public abstract class CachedRecipeMixin<RECIPE extends MekanismRecipe<?>> implem
 
     @Override
     public int getInputPower() {
-        return (int) perTickEnergy.getAsLong();
+        return (int) perTickEnergy.getAsLong() / AnvilCraftTransducers.CONFIG.transducers;
     }
 
     @Override
     public void setNoEnergyError() {
         updateErrors(Set.of(CachedRecipe.OperationTracker.RecipeError.NOT_ENOUGH_ENERGY));
         setActive.accept(false);
+        resetNoRecipeProcess();
+    }
+
+    @Override
+    public void setIdle() {
+        updateErrors(Collections.emptySet());
         resetNoRecipeProcess();
     }
 
@@ -84,7 +81,7 @@ public abstract class CachedRecipeMixin<RECIPE extends MekanismRecipe<?>> implem
      *
      * <p>
      * {@link #storedEnergy}始终返回{@link  Long#MAX_VALUE}，由{@link PowerGrid#isWorking}来控制设备的运行<br>
-     * {@link #useEnergy}的实现逻辑由{@link PowerGrid#flush} 通过{@link #getInputPower}自动计算
+     * {@link #useEnergy}的实现逻辑由{@link PowerGrid#flush}通过{@link #getInputPower}自动计算
      * </p>
      */
     @Inject(
@@ -93,37 +90,12 @@ public abstract class CachedRecipeMixin<RECIPE extends MekanismRecipe<?>> implem
     )
     public void anvilCraftTransducers$setEnergyRequirements(LongSupplier perTickEnergy, IEnergyContainer energyContainer, CallbackInfoReturnable<CachedRecipe<RECIPE>> cir) {
         if (
-                energyContainer instanceof MachineEnergyContainer<?> machineEnergyContainer
-                        && ((MachineEnergyContainerAccessor<?>) energyContainer).getTile() instanceof IPowerConsumer powerConsumer
+                ((MachineEnergyContainerAccessor<?>) energyContainer).getTile() instanceof IPowerConsumer powerConsumer
                         && powerConsumer.getGrid() != null
         ) {
-            this.perTickEnergy = () -> machineEnergyContainer.getEnergyPerTick() / AnvilCraftTransducers.CONFIG.transducers;
             this.storedEnergy = () -> Long.MAX_VALUE;
             this.useEnergy = energy -> {
             };
-            this.gridSupplier = powerConsumer::getGrid;
-        }
-    }
-
-    /**
-     * 检测{@link PowerGrid#isWorking}和{@link IPowerGrid#canChange}控制配方是否执行
-     */
-    @Inject(
-            method = "process",
-            at = @At("HEAD"),
-            cancellable = true
-    )
-    public void anvilCraftTransducers$process(CallbackInfo ci) {
-        // gridSupplier为null时，意味着机器并没有能量需求，所以直接跳出
-        if (gridSupplier == null) return;
-        PowerGrid grid = gridSupplier.get();
-        if (
-                grid == null
-                        || !grid.isWorking()
-                        || grid instanceof IPowerGrid powerGrid
-                        && powerGrid.canChange()
-        ) {
-            ci.cancel();
         }
     }
 }

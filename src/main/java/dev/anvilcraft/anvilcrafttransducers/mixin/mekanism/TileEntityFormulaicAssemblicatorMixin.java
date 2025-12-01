@@ -4,7 +4,6 @@ import dev.anvilcraft.anvilcrafttransducers.AnvilCraftTransducers;
 import dev.anvilcraft.anvilcrafttransducers.util.MekPowerConsumerUtils;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
-import mekanism.common.tile.machine.TileEntityFluidicPlenisher;
 import mekanism.common.tile.machine.TileEntityFormulaicAssemblicator;
 import mekanism.common.tile.prefab.TileEntityConfigurableMachine;
 import net.minecraft.core.BlockPos;

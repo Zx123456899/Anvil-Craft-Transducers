@@ -1,6 +1,6 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
-import dev.anvilcraft.anvilcrafttransducers.api.mekanism.IMekPowerProducer;
+import dev.anvilcraft.anvilcrafttransducers.api.mekanism.IMekPowerManager;
 import dev.dubhe.anvilcraft.api.power.IPowerProducer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import mekanism.common.tile.prefab.TileEntityMultiblock;
@@ -54,7 +54,7 @@ public abstract class TileEntityTurbineCasingMixin extends TileEntityMultiblock<
         if (!getEnergyContainers(null).isEmpty() && !getMultiblockData(getManager()).getValveData().isEmpty()) {
             // 由于电网的特性，每个端口都会获取一次发电量
             // 所以将发电量除以端口数量才能获取正常的发电量
-            return ((IMekPowerProducer) getEnergyContainers(null).getFirst()).getOutputPower() / getMultiblockData(getManager()).getValveData().size();
+            return ((IMekPowerManager) getEnergyContainers(null).getFirst()).getOutputPower() / getMultiblockData(getManager()).getValveData().size();
         }
         return 0;
     }

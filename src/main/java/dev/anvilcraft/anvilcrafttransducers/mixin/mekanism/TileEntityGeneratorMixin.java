@@ -1,6 +1,6 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
-import dev.anvilcraft.anvilcrafttransducers.api.mekanism.IMekPowerProducer;
+import dev.anvilcraft.anvilcrafttransducers.api.mekanism.IMekPowerManager;
 import dev.dubhe.anvilcraft.api.power.IPowerProducer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import mekanism.common.capabilities.energy.BasicEnergyContainer;
@@ -50,6 +50,6 @@ public abstract class TileEntityGeneratorMixin extends TileEntityMekanism implem
 
     @Override
     public int getOutputPower() {
-        return ((IMekPowerProducer) getEnergyContainer()).getOutputPower();
+        return ((IMekPowerManager) getEnergyContainer()).getOutputPower();
     }
 }

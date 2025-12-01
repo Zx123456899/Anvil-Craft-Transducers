@@ -1,5 +1,6 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
+import dev.anvilcraft.anvilcrafttransducers.AnvilCraftTransducers;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import mekanism.common.config.MekanismConfig;
@@ -58,8 +59,11 @@ public abstract class TileEntitySPSCasingMixin extends TileEntityMultiblock<SPSM
     @Override
     public int getInputPower() {
         if ((Object) this instanceof TileEntitySPSPort) {
-            if (!getMultiblockData(getManager()).getValveData().isEmpty()) {
-                return (int) (MekanismConfig.general.spsEnergyPerInput.get() / getMultiblockData(getManager()).getValveData().size()) / 10;
+            if (getMultiblockData(getManager()) instanceof SPSMultiblockData SPSData
+                    && SPSData.couldOperate
+                    && !SPSData.getValveData().isEmpty()
+            ) {
+                return (int) (MekanismConfig.general.spsEnergyPerInput.get() / getMultiblockData(getManager()).getValveData().size()) / AnvilCraftTransducers.CONFIG.transducers;
             }
         }
         return 0;

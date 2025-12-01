@@ -1,13 +1,9 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
-import com.llamalad7.mixinextras.sugar.Local;
-import com.llamalad7.mixinextras.sugar.ref.LocalLongRef;
 import dev.anvilcraft.anvilcrafttransducers.AnvilCraftTransducers;
 import dev.anvilcraft.anvilcrafttransducers.util.MekPowerConsumerUtils;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
-import mekanism.common.capabilities.energy.MachineEnergyContainer;
-import mekanism.common.tile.TileEntityModificationStation;
 import mekanism.common.tile.base.TileEntityMekanism;
 import mekanism.common.tile.machine.TileEntityDimensionalStabilizer;
 import net.minecraft.core.BlockPos;

@@ -1,6 +1,7 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism.gui;
 
 import mekanism.client.gui.GuiMekanismTile;
+import mekanism.client.gui.element.bar.GuiVerticalPowerBar;
 import mekanism.client.gui.machine.GuiElectricPump;
 import mekanism.common.inventory.container.tile.MekanismTileContainer;
 import mekanism.common.tile.machine.TileEntityElectricPump;
@@ -9,7 +10,7 @@ import net.minecraft.world.entity.player.Inventory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GuiElectricPump.class)
 public abstract class GuiElectricPumpMixin extends GuiMekanismTile<TileEntityElectricPump, MekanismTileContainer<TileEntityElectricPump>> {
@@ -18,12 +19,12 @@ public abstract class GuiElectricPumpMixin extends GuiMekanismTile<TileEntityEle
     }
 
     @Inject(
-            method = "lambda$addGuiElements$1",
-            at = @At("RETURN"),
-            cancellable = true
+            method = "addGuiElements",
+            at = @At("RETURN")
     )
-    public void anvilCraftTransducers$setNotEnoughEnergy(CallbackInfoReturnable<Boolean> cir) {
-        // 返回是否使用能量来判断机器是否有足够能量
-        cir.setReturnValue(!tile.usedEnergy());
+    public void anvilCraftTransducers$addGuiElements(CallbackInfo ci) {
+        // 测试删除能量条显示
+        // 不过我搞不懂为什么warning还能存在，他不是在guiBar里面吗......
+        children().stream().filter(children -> children instanceof GuiVerticalPowerBar).findFirst().ifPresent(this::removeWidget);
     }
 }
