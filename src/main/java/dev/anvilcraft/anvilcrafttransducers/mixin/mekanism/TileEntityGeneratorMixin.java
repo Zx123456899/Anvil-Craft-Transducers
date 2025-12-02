@@ -1,6 +1,6 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
-import dev.anvilcraft.anvilcrafttransducers.api.mekanism.IMekPowerManager;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.IMekPowerManager;
 import dev.dubhe.anvilcraft.api.power.IPowerProducer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import mekanism.common.capabilities.energy.BasicEnergyContainer;

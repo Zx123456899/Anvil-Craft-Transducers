@@ -7,9 +7,11 @@
     "anvilcraft.PowerGridMixin",
     "mekanism.BasicEnergyContainerMixin",
     "mekanism.CachedRecipeMixin",
+    "mekanism.LaserEnergyContainerMixin",
     "mekanism.MachineEnergyContainerAccessor",
     "mekanism.RecipeCacheLookupMonitorMixin",
     "mekanism.SPSMultiblockDataMixin",
+    "mekanism.TileEntityChargepadMixin",
     "mekanism.TileEntityDigitalMinerMixin",
     "mekanism.TileEntityDimensionalStabilizerMixin",
     "mekanism.TileEntityElectricPumpMixin",
@@ -19,6 +21,7 @@
     "mekanism.TileEntityFusionReactorBlockMixin",
     "mekanism.TileEntityGeneratorMixin",
     "mekanism.TileEntityHeatGeneratorMixin",
+    "mekanism.TileEntityLaserMixin",
     "mekanism.TileEntityModificationStationMixin",
     "mekanism.TileEntityRecipeMachineMixin",
     "mekanism.TileEntityResistiveHeaterMixin",
@@ -28,14 +31,7 @@
     "mekanism.TileEntityTurbineCasingMixin"
   ],
   "client": [
-    "mekanism.gui.GuiDigitalMinerMixin",
-    "mekanism.gui.GuiDimensionalStabilizerMixin",
-    "mekanism.gui.GuiElectricPumpMixin",
-    "mekanism.gui.GuiFluidicPlenisherMixin",
-    "mekanism.gui.GuiFormulaicAssemblicatorMixin",
-    "mekanism.gui.GuiModificationStationMixin",
-    "mekanism.gui.GuiResistiveHeaterMixin",
-    "mekanism.gui.GuiSeismicVibratorMixin"
+    "mekanism.GuiMekanismMixin"
   ],
   "injectors": {
     "defaultRequire": 1

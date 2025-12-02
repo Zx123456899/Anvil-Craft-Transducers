@@ -1,6 +1,6 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
-import dev.anvilcraft.anvilcrafttransducers.api.mekanism.IMekPowerManager;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.IMekPowerManager;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
@@ -47,8 +47,7 @@ public class TileEntityElectricPumpMixin extends TileEntityMekanism implements I
 
     @Override
     public void setGrid(@Nullable PowerGrid grid) {
-        IMekPowerManager mekPowerManager = (IMekPowerManager) energyContainer;
-        mekPowerManager.markPowerChange();
+        ((IMekPowerManager) energyContainer).markPowerChange();
         this.grid = grid;
     }
 

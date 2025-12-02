@@ -1,4 +1,4 @@
-package dev.anvilcraft.anvilcrafttransducers.api.mekanism;
+package dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism;
 
 /**
  * 接口注入 - 为BasicEnergyContainer添加方法

@@ -1,14 +1,10 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
-import com.llamalad7.mixinextras.sugar.Local;
-import com.llamalad7.mixinextras.sugar.ref.LocalLongRef;
-import dev.anvilcraft.anvilcrafttransducers.AnvilCraftTransducers;
-import dev.anvilcraft.anvilcrafttransducers.util.MekPowerConsumerUtils;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.IMekPowerManager;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import mekanism.common.capabilities.energy.ResistiveHeaterEnergyContainer;
 import mekanism.common.capabilities.heat.BasicHeatCapacitor;
-import mekanism.common.config.MekanismConfig;
 import mekanism.common.tile.base.TileEntityMekanism;
 import mekanism.common.tile.machine.TileEntityResistiveHeater;
 import net.minecraft.core.BlockPos;
@@ -32,11 +28,6 @@ public abstract class TileEntityResistiveHeaterMixin extends TileEntityMekanism 
     private BasicHeatCapacitor heatCapacitor;
     @Unique
     private PowerGrid grid = null;
-    /**
-     * 用电量缓存
-     */
-    @Unique
-    private int inputPower = 0;
 
     public TileEntityResistiveHeaterMixin(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state);
@@ -59,37 +50,22 @@ public abstract class TileEntityResistiveHeaterMixin extends TileEntityMekanism 
 
     @Override
     public void setGrid(@Nullable PowerGrid grid) {
+        ((IMekPowerManager) energyContainer).markPowerChange();
         this.grid = grid;
     }
 
     @Override
     public int getInputPower() {
-        return inputPower;
+        return ((IMekPowerManager) energyContainer).getInputPower();
     }
 
-    /**
-     * <p>
-     * 转换能量消耗为kW
-     * </p>
-     * 修改toUse值
-     */
     @Inject(
             method = "onUpdateServer",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lmekanism/common/tile/machine/TileEntityResistiveHeater;setActive(Z)V"
-            )
+            at = @At("HEAD")
     )
-    public void anvilCraftTransducers$setEnergyPerTick(CallbackInfoReturnable<Boolean> cir, @Local LocalLongRef toUse) {
-        long energyPerTick = energyContainer.getEnergyPerTick();
-        if (canFunction()) {
-            inputPower = (int) (energyPerTick / AnvilCraftTransducers.CONFIG.transducers);
-            if (MekPowerConsumerUtils.getEnergyPerTick(grid) == 0) {
-                heatCapacitor.handleHeat(energyPerTick * MekanismConfig.general.resistiveHeaterEfficiency.get());
-                toUse.set(energyPerTick);
-            }
-        } else {
-            inputPower = 0;
+    public void anvilCraftTransducers$onUpdateServer(CallbackInfoReturnable<Boolean> cir) {
+        if (!canFunction()) {
+            ((IMekPowerManager) energyContainer).setInputPower(0);
         }
     }
 }

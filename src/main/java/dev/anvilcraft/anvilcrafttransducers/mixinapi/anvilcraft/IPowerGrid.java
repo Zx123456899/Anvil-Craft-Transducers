@@ -1,4 +1,4 @@
-package dev.anvilcraft.anvilcrafttransducers.api.anvilcraft;
+package dev.anvilcraft.anvilcrafttransducers.mixinapi.anvilcraft;
 
 /**
  * 接口注入 - 为电网添加方法

@@ -7,7 +7,6 @@ import mekanism.common.config.MekanismConfig;
 import mekanism.common.content.sps.SPSMultiblockData;
 import mekanism.common.lib.multiblock.MultiblockManager;
 import mekanism.common.tile.multiblock.TileEntitySPSCasing;
-import mekanism.common.tile.multiblock.TileEntitySPSPort;
 import mekanism.common.tile.prefab.TileEntityMultiblock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -58,13 +57,11 @@ public abstract class TileEntitySPSCasingMixin extends TileEntityMultiblock<SPSM
 
     @Override
     public int getInputPower() {
-        if ((Object) this instanceof TileEntitySPSPort) {
-            if (getMultiblockData(getManager()) instanceof SPSMultiblockData SPSData
-                    && SPSData.couldOperate
-                    && !SPSData.getValveData().isEmpty()
-            ) {
-                return (int) (MekanismConfig.general.spsEnergyPerInput.get() / getMultiblockData(getManager()).getValveData().size()) / AnvilCraftTransducers.CONFIG.transducers;
-            }
+        if (this == getStructure().getController()
+                && getMultiblockData(getManager()) instanceof SPSMultiblockData SPSData
+                && SPSData.couldOperate
+        ) {
+            return (int) MekanismConfig.general.spsEnergyPerInput.get() / AnvilCraftTransducers.CONFIG.transducers;
         }
         return 0;
     }

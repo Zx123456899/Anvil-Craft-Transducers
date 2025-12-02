@@ -1,8 +1,8 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
 import dev.anvilcraft.anvilcrafttransducers.AnvilCraftTransducers;
-import dev.anvilcraft.anvilcrafttransducers.api.mekanism.ICachedRecipe;
-import dev.anvilcraft.anvilcrafttransducers.api.mekanism.IMekPowerConsumer;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.ICachedRecipe;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.IMekPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;

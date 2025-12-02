@@ -1,4 +1,4 @@
-package dev.anvilcraft.anvilcrafttransducers.api.mekanism;
+package dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism;
 
 public interface IMekPowerConsumer {
     /**

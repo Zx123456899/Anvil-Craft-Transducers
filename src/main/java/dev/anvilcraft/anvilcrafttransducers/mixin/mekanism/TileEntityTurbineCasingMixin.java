@@ -1,8 +1,9 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
-import dev.anvilcraft.anvilcrafttransducers.api.mekanism.IMekPowerManager;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.IMekPowerManager;
 import dev.dubhe.anvilcraft.api.power.IPowerProducer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
+import mekanism.api.energy.IEnergyContainer;
 import mekanism.common.tile.prefab.TileEntityMultiblock;
 import mekanism.generators.common.content.turbine.TurbineMultiblockData;
 import mekanism.generators.common.tile.turbine.TileEntityTurbineCasing;
@@ -14,6 +15,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+
+import java.util.List;
 
 @Mixin(TileEntityTurbineCasing.class)
 public abstract class TileEntityTurbineCasingMixin extends TileEntityMultiblock<TurbineMultiblockData> implements IPowerProducer {
@@ -51,10 +54,9 @@ public abstract class TileEntityTurbineCasingMixin extends TileEntityMultiblock<
 
     @Override
     public int getOutputPower() {
-        if (!getEnergyContainers(null).isEmpty() && !getMultiblockData(getManager()).getValveData().isEmpty()) {
-            // 由于电网的特性，每个端口都会获取一次发电量
-            // 所以将发电量除以端口数量才能获取正常的发电量
-            return ((IMekPowerManager) getEnergyContainers(null).getFirst()).getOutputPower() / getMultiblockData(getManager()).getValveData().size();
+        List<IEnergyContainer> energyContainers = getMultiblock().getEnergyContainers(null);
+        if (this == getStructure().getController() && !energyContainers.isEmpty()) {
+            return ((IMekPowerManager) energyContainers.getFirst()).getOutputPower();
         }
         return 0;
     }

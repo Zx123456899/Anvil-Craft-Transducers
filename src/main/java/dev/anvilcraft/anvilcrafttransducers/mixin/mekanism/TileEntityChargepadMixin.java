@@ -4,8 +4,9 @@ import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.IMekPowerManager;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
-import mekanism.common.tile.TileEntityModificationStation;
+import mekanism.common.tile.TileEntityChargepad;
 import mekanism.common.tile.base.TileEntityMekanism;
+import mekanism.common.tile.machine.TileEntityElectricPump;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.Level;
@@ -19,14 +20,14 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(TileEntityModificationStation.class)
-public abstract class TileEntityModificationStationMixin extends TileEntityMekanism implements IPowerConsumer {
+@Mixin(TileEntityChargepad.class)
+public abstract class TileEntityChargepadMixin extends TileEntityMekanism implements IPowerConsumer {
     @Shadow
-    private MachineEnergyContainer<TileEntityModificationStation> energyContainer;
+    private MachineEnergyContainer<TileEntityElectricPump> energyContainer;
     @Unique
     private PowerGrid grid = null;
 
-    public TileEntityModificationStationMixin(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
+    public TileEntityChargepadMixin(Holder<Block> blockProvider, BlockPos pos, BlockState state) {
         super(blockProvider, pos, state);
     }
 
@@ -58,10 +59,10 @@ public abstract class TileEntityModificationStationMixin extends TileEntityMekan
 
     @Inject(
             method = "onUpdateServer",
-            at = @At("HEAD")
+            at = @At("RETURN")
     )
     public void anvilCraftTransducers$onUpdateServer(CallbackInfoReturnable<Boolean> cir) {
-        if (!canFunction()) {
+        if (!getActive()) {
             ((IMekPowerManager) energyContainer).setInputPower(0);
         }
     }

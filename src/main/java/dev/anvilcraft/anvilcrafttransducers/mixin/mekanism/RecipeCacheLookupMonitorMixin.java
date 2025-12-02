@@ -1,7 +1,7 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
-import dev.anvilcraft.anvilcrafttransducers.api.anvilcraft.IPowerGrid;
-import dev.anvilcraft.anvilcrafttransducers.api.mekanism.ICachedRecipe;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.anvilcraft.IPowerGrid;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.ICachedRecipe;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import mekanism.api.recipes.MekanismRecipe;
 import mekanism.api.recipes.cache.CachedRecipe;

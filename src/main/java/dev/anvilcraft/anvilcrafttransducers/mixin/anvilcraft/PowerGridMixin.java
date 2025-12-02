@@ -1,6 +1,6 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.anvilcraft;
 
-import dev.anvilcraft.anvilcrafttransducers.api.anvilcraft.IPowerGrid;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.anvilcraft.IPowerGrid;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
