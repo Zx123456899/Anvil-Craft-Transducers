@@ -80,11 +80,11 @@ public abstract class TileEntityChargepadMixin extends TileEntityMekanism implem
     protected boolean onUpdateServer() {
         boolean sendUpdatePacket = super.onUpdateServer();
         boolean active = false;
+        IMekPowerManager mekPowerManager = (IMekPowerManager) energyContainer;
         if (!energyContainer.isEmpty()) {
             //Use 0.4 for y to catch entities that are partially standing on the back pane
             List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, new AABB(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(),
                     worldPosition.getX() + 1, worldPosition.getY() + 0.4, worldPosition.getZ() + 1), CHARGE_PREDICATE);
-            IMekPowerManager powerManager = (IMekPowerManager) energyContainer;
             int power = 0;
             for (LivingEntity entity : entities) {
                 if (entity instanceof Player) {
@@ -101,9 +101,9 @@ public abstract class TileEntityChargepadMixin extends TileEntityMekanism implem
                     //Note: Robits are handled by this path
                     active = true;
                 }
-                power += powerManager.getNoChangeInputPower();
+                power += mekPowerManager.getNoChangeInputPower();
             }
-            ((IMekPowerManager) energyContainer).setInputPower(power);
+            mekPowerManager.setInputPower(power);
             if (power <= 0) {
                 active = false;
             }
@@ -147,9 +147,6 @@ public abstract class TileEntityChargepadMixin extends TileEntityMekanism implem
         long simulatedRemainder = energyHandler.insertEnergy(energyToGive, Action.SIMULATE);
         long needEnergy = energyToGive - simulatedRemainder;
         IMekPowerManager mekPowerManager = ((IMekPowerManager) energyContainer);
-        if (needEnergy <= 0) {
-            mekPowerManager.markPowerChange();
-        }
         mekPowerManager.setInputPower(0);
         if (
                 needEnergy > 0
@@ -160,6 +157,10 @@ public abstract class TileEntityChargepadMixin extends TileEntityMekanism implem
                         && grid.isWorking()
         ) {
             energyHandler.insertEnergy(needEnergy, Action.EXECUTE);
+            if (energyHandler.getNeededEnergy(0) == 0) {
+                mekPowerManager.markPowerChange();
+                mekPowerManager.setInputPower(0);
+            }
             return true;
         }
         return false;

@@ -3,9 +3,9 @@ package dev.anvilcraft.anvilcrafttransducers;
 import com.mojang.logging.LogUtils;
 import com.tterrag.registrate.Registrate;
 import dev.anvilcraft.anvilcrafttransducers.data.ModDatagen;
-import dev.anvilcraft.anvilcrafttransducers.init.AddonBlocks;
-import dev.anvilcraft.anvilcrafttransducers.init.AddonItemGroups;
-import dev.anvilcraft.anvilcrafttransducers.init.AddonItems;
+//import dev.anvilcraft.anvilcrafttransducers.init.AddonBlocks;
+//import dev.anvilcraft.anvilcrafttransducers.init.AddonItemGroups;
+//import dev.anvilcraft.anvilcrafttransducers.init.AddonItems;
 import dev.anvilcraft.lib.config.ConfigManager;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
@@ -22,9 +22,9 @@ public class AnvilCraftTransducers {
     public static final Registrate REGISTRATE = Registrate.create(MOD_ID);
 
     public AnvilCraftTransducers(@NotNull IEventBus modEventBus, @NotNull ModContainer modContainer) {
-        AddonItemGroups.register(modEventBus);
-        AddonBlocks.register();
-        AddonItems.register();
+//        AddonItemGroups.register(modEventBus);
+//        AddonBlocks.register();
+//        AddonItems.register();
         ModDatagen.init();
     }
 

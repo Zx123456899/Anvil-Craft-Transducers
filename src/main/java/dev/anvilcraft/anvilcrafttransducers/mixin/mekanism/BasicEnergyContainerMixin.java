@@ -4,6 +4,7 @@ import dev.anvilcraft.anvilcrafttransducers.AnvilCraftTransducers;
 import dev.anvilcraft.anvilcrafttransducers.mixinapi.anvilcraft.IPowerGrid;
 import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.ILaserEnergyContainer;
 import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.IMekPowerManager;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.IOriginalBehavior;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import mekanism.api.Action;
@@ -12,8 +13,6 @@ import mekanism.api.energy.IEnergyContainer;
 import mekanism.common.capabilities.energy.BasicEnergyContainer;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.tile.base.TileEntityMekanism;
-import mekanism.common.tile.laser.TileEntityLaserAmplifier;
-import mekanism.common.tile.laser.TileEntityLaserTractorBeam;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -58,13 +57,13 @@ public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IMe
     }
 
     @Override
-    public int getNoChangeInputPower() {
-        return inputPower;
+    public void setInputPower(int inputPower) {
+        this.inputPower = inputPower;
     }
 
     @Override
-    public void setInputPower(int inputPower) {
-        this.inputPower = inputPower;
+    public int getNoChangeInputPower() {
+        return inputPower;
     }
 
     /**
@@ -74,6 +73,11 @@ public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IMe
     public void markPowerChange() {
         resetInputPower();
         changePower = false;
+    }
+
+    @Override
+    public void setPowerChanged() {
+        changePower = true;
     }
 
     @Override
@@ -127,6 +131,7 @@ public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IMe
             at = @At("RETURN")
     )
     public void anvilCraftTransducers$getEnergy(CallbackInfoReturnable<Long> cir) {
+        if (getMachine() instanceof IOriginalBehavior || this instanceof IOriginalBehavior) return;
         PowerGrid grid = getGrid();
         if (grid != null) {
             stored = (long) grid.getGenerate() * AnvilCraftTransducers.CONFIG.transducers;
@@ -141,6 +146,7 @@ public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IMe
             cancellable = true
     )
     public void anvilCraftTransducers$setEnergy(long energy, CallbackInfo ci) {
+        if (getMachine() instanceof IOriginalBehavior || this instanceof IOriginalBehavior) return;
         ci.cancel();
     }
 
@@ -150,6 +156,7 @@ public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IMe
             cancellable = true
     )
     public void anvilCraftTransducers$isEmpty(CallbackInfoReturnable<Boolean> cir) {
+        if (getMachine() instanceof IOriginalBehavior || this instanceof IOriginalBehavior) return;
         cir.setReturnValue(getEnergy() == 0);
     }
 
@@ -162,16 +169,13 @@ public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IMe
             cancellable = true
     )
     public void anvilCraftTransducers$insert(long amount, Action action, AutomationType automationType, CallbackInfoReturnable<Long> cir) {
+        if (getMachine() instanceof IOriginalBehavior || this instanceof IOriginalBehavior) return;
         if (action.execute()) {
             outputPower = (int) (amount / AnvilCraftTransducers.CONFIG.transducers);
             onContentsChanged();
         }
-        if (
-                !(getMachine() instanceof TileEntityLaserTractorBeam)
-                        && !(getMachine() instanceof TileEntityLaserAmplifier)
-        ) {
-            cir.setReturnValue(amount);
-        }
+        cir.setReturnValue(amount);
+
     }
 
     /**
@@ -183,6 +187,7 @@ public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IMe
             cancellable = true
     )
     public void anvilCraftTransducers$extract(long amount, Action action, AutomationType automationType, CallbackInfoReturnable<Long> cir) {
+        if (getMachine() instanceof IOriginalBehavior || this instanceof IOriginalBehavior) return;
         inputPower = (int) (amount / AnvilCraftTransducers.CONFIG.transducers);
         if (action.execute()) {
             onContentsChanged();
@@ -196,10 +201,7 @@ public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IMe
                         && (changePower || grid.getRemaining() >= inputPower)
         ) {
             cir.setReturnValue(amount);
-        } else if (
-                !(getMachine() instanceof TileEntityLaserTractorBeam)
-                        && !(getMachine() instanceof TileEntityLaserAmplifier)
-        ) {
+        } else {
             cir.setReturnValue(0L);
         }
     }

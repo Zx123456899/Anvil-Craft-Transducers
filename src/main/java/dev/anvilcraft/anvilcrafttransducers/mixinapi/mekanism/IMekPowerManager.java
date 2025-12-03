@@ -31,6 +31,11 @@ public interface IMekPowerManager {
     void markPowerChange();
 
     /**
+     * 设置已获取过电量
+     */
+    void setPowerChanged();
+
+    /**
      * @return 是否电量改变
      */
     boolean isPowerChange();
