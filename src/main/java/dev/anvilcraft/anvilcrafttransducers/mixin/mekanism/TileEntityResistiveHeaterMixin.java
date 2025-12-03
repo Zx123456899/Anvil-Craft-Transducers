@@ -24,8 +24,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class TileEntityResistiveHeaterMixin extends TileEntityMekanism implements IPowerConsumer {
     @Shadow
     private ResistiveHeaterEnergyContainer energyContainer;
-    @Shadow
-    private BasicHeatCapacitor heatCapacitor;
     @Unique
     private PowerGrid grid = null;
 

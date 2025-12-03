@@ -15,6 +15,12 @@ public interface IMekPowerManager {
     int getInputPower();
 
     /**
+     * 不改变电量获取标记
+     * @return 设备用电量
+     */
+    int getNoChangeInputPower();
+
+    /**
      * 设置设备用电量
      */
     void setInputPower(int inputPower);
@@ -23,4 +29,9 @@ public interface IMekPowerManager {
      * 标记电量获取改变
      */
     void markPowerChange();
+
+    /**
+     * @return 是否电量改变
+     */
+    boolean isPowerChange();
 }

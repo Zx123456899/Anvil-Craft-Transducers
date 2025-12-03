@@ -28,7 +28,8 @@
     "mekanism.TileEntitySeismicVibratorMixin",
     "mekanism.TileEntitySPSCasingMixin",
     "mekanism.TileEntityTeleporterMixin",
-    "mekanism.TileEntityTurbineCasingMixin"
+    "mekanism.TileEntityTurbineCasingMixin",
+    "mekanism.WarningTrackerAccessor"
   ],
   "client": [
     "mekanism.GuiMekanismMixin"

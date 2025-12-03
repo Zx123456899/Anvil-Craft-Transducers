@@ -58,7 +58,6 @@ public abstract class TileEntityDigitalMinerMixin extends TileEntityMekanism imp
 
     @Override
     public int getInputPower() {
-        if (!getActive()) return 0;
         return ((IMekPowerManager) energyContainer).getInputPower();
     }
 
@@ -67,7 +66,7 @@ public abstract class TileEntityDigitalMinerMixin extends TileEntityMekanism imp
             at = @At("HEAD")
     )
     public void anvilCraftTransducers$onUpdateServer(CallbackInfoReturnable<Boolean> cir) {
-        if (!canFunction()) {
+        if (!canFunction() || !getActive()) {
             ((IMekPowerManager) energyContainer).setInputPower(0);
         }
     }
