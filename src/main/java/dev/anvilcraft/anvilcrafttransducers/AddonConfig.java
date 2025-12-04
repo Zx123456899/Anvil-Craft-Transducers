@@ -5,6 +5,6 @@ import dev.anvilcraft.lib.config.Config;
 
 @Config(name = AnvilCraftTransducers.MOD_ID)
 public class AddonConfig {
-    @Comment("1kW = ?MJ")
-    public int transducers = 10;
+    @Comment("1kW = ?J")
+    public int transducers = 200;
 }

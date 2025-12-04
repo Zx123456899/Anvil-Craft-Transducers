@@ -2,12 +2,12 @@ package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
 import dev.anvilcraft.anvilcrafttransducers.mixinapi.anvilcraft.IPowerGrid;
 import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.ICachedRecipe;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.IOriginalBehavior;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import mekanism.api.recipes.MekanismRecipe;
 import mekanism.api.recipes.cache.CachedRecipe;
 import mekanism.common.recipe.lookup.IRecipeLookupHandler;
 import mekanism.common.recipe.lookup.monitor.RecipeCacheLookupMonitor;
-import mekanism.common.tile.machine.TileEntitySolarNeutronActivator;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -35,13 +35,9 @@ public abstract class RecipeCacheLookupMonitorMixin<RECIPE extends MekanismRecip
             cancellable = true
     )
     public void anvilCraftTransducers$updateAndProcess(CallbackInfoReturnable<Boolean> cir) {
+        // 当设备实现IOriginalBehavior时跳出，使用原本逻辑
+        if (handler instanceof IOriginalBehavior) return;
         if (
-            // 当设备是太阳能中子活化仪时，使用原本逻辑
-            // 因为它并不是用电设备
-                handler instanceof TileEntitySolarNeutronActivator
-        ) {
-            cachedRecipe.process();
-        } else if (
             // 当电网未过载且电网不需要变动时，执行配方
                 handler instanceof IPowerConsumer powerConsumer
                         && powerConsumer.isGridWorking()

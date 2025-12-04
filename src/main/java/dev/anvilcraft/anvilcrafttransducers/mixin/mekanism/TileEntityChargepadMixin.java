@@ -107,6 +107,8 @@ public abstract class TileEntityChargepadMixin extends TileEntityMekanism implem
             if (power <= 0) {
                 active = false;
             }
+        } else {
+            mekPowerManager.setInputPower(0);
         }
         if (active != getActive()) {
             setActive(active);

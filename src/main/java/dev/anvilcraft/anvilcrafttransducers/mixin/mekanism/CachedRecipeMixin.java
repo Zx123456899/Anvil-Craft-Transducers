@@ -90,7 +90,8 @@ public abstract class CachedRecipeMixin<RECIPE extends MekanismRecipe<?>> implem
     )
     public void anvilCraftTransducers$setEnergyRequirements(LongSupplier perTickEnergy, IEnergyContainer energyContainer, CallbackInfoReturnable<CachedRecipe<RECIPE>> cir) {
         if (
-                ((MachineEnergyContainerAccessor<?>) energyContainer).getTile() instanceof IPowerConsumer powerConsumer
+                energyContainer instanceof MachineEnergyContainerAccessor<?> machineEnergyContainerAccessor
+                        && machineEnergyContainerAccessor.getTile() instanceof IPowerConsumer powerConsumer
                         && powerConsumer.getGrid() != null
         ) {
             this.storedEnergy = () -> Long.MAX_VALUE;
