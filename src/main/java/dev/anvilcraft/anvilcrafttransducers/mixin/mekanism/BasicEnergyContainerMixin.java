@@ -14,6 +14,7 @@ import mekanism.common.capabilities.energy.BasicEnergyContainer;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
 import mekanism.common.tile.base.TileEntityMekanism;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -160,6 +161,13 @@ public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IMe
         cir.setReturnValue(getEnergy() == 0);
     }
 
+    @Override
+    public @Range(from = 0L, to = 9223372036854775807L) long getNeeded() {
+        if (getMachine() instanceof IOriginalBehavior || this instanceof IOriginalBehavior)
+            return IEnergyContainer.super.getNeeded();
+        return 0;
+    }
+
     /**
      * 拦截了电量输入
      */
@@ -175,7 +183,6 @@ public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IMe
             onContentsChanged();
         }
         cir.setReturnValue(amount);
-
     }
 
     /**

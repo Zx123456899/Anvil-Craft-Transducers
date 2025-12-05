@@ -2,7 +2,10 @@ package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
 import mekanism.client.gui.GuiMekanism;
 import mekanism.client.gui.VirtualSlotContainerScreen;
+import mekanism.client.gui.element.bar.GuiHorizontalPowerBar;
 import mekanism.client.gui.element.bar.GuiVerticalPowerBar;
+import mekanism.client.gui.element.tab.GuiEnergyTab;
+import mekanism.client.gui.robit.GuiRobitMain;
 import mekanism.common.inventory.warning.IWarningTracker;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -15,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static mekanism.common.inventory.warning.WarningTracker.WarningType.NOT_ENOUGH_ENERGY;
+import static mekanism.common.inventory.warning.WarningTracker.WarningType.NOT_ENOUGH_ENERGY_REDUCED_RATE;
 
 @Mixin(GuiMekanism.class)
 public abstract class GuiMekanismMixin<CONTAINER extends AbstractContainerMenu> extends VirtualSlotContainerScreen<CONTAINER> {
@@ -34,22 +38,15 @@ public abstract class GuiMekanismMixin<CONTAINER extends AbstractContainerMenu> 
             )
     )
     public void anvilCraftTransducers$init(CallbackInfo ci) {
-        children().stream()
-                .filter(children -> children instanceof GuiVerticalPowerBar)
-                .findFirst()
-                .ifPresent(this::removeWidget);
+        if ((Object) this instanceof GuiRobitMain) return;
+        children().removeIf(
+                children -> children instanceof GuiVerticalPowerBar
+                        || children instanceof GuiHorizontalPowerBar
+                        || children instanceof GuiEnergyTab
+        );
         if (warningTracker instanceof WarningTrackerAccessor warningTrackerAccessor) {
             warningTrackerAccessor.getWarnings().remove(NOT_ENOUGH_ENERGY);
-//            if ((Object) this instanceof GuiMekanismTile<?, ?> guiMekanismTile) {
-//                warningTrackerAccessor.getWarnings()
-//                        .put(
-//                                NOT_ENOUGH_ENERGY,
-//                                List.of(
-//                                        () -> guiMekanismTile.getTileEntity() instanceof IPowerComponent powerComponent
-//                                                && !powerComponent.isGridWorking()
-//                                )
-//                        );
-//            }
+            warningTrackerAccessor.getWarnings().remove(NOT_ENOUGH_ENERGY_REDUCED_RATE);
         }
     }
 }
