@@ -31,7 +31,13 @@
     "mekanism.TileEntitySPSCasingMixin",
     "mekanism.TileEntityTeleporterMixin",
     "mekanism.TileEntityTurbineCasingMixin",
-    "mekanism.WarningTrackerAccessor"
+    "mekanism.WarningTrackerAccessor",
+    "moremachine.TileEntityMoreMachineGeneratorMixin",
+    "moremachine.TileEntityMoreMachineFactoryMixin",
+    "moremachine.TileEntityAdvancedFactoryBaseMixin",
+    "moremachine.TileEntityAmbientGasCollectorMixin",
+    "moremachine.TileEntityWirelessChargingStationMixin",
+    "moremachine.TileEntityWirelessTransmissionStationMixin"
   ],
   "client": [
     "mekanism.GuiMekanismMixin"

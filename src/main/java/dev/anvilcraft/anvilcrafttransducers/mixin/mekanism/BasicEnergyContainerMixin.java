@@ -29,8 +29,22 @@ public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IEx
     private int inputPower = 0;
     @Unique
     private boolean changePower = false;
+    /**
+     * 用于非 MachineEnergyContainer 的 BasicEnergyContainer（如 TileEntityMoreMachineGenerator 中的能量容器）
+     * 存储所属的 TileEntity 引用，使 BasicEnergyContainerMixin 能够获取到对应的 PowerGrid。
+     */
+    @Unique
+    private TileEntityMekanism act$tile = null;
     @Shadow
     private long stored;
+
+    /**
+     * 设置所属的 TileEntity（用于非 MachineEnergyContainer 的 BasicEnergyContainer）
+     */
+    @Unique
+    public void anvilCraftTransducers$setTile(TileEntityMekanism tile) {
+        this.act$tile = tile;
+    }
 
     @Shadow
     public abstract long getEnergy();
@@ -99,7 +113,7 @@ public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IEx
         if (this instanceof ILaserEnergyContainer<?> laserEnergyContainer) {
             return laserEnergyContainer.getTile();
         }
-        return null;
+        return act$tile;
     }
 
     private @Nullable PowerGrid getGrid() {

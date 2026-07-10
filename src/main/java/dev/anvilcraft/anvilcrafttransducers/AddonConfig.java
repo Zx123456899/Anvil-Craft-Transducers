@@ -33,7 +33,7 @@ public class AddonConfig {
 
     public int getTransducerFactor(String modId) {
         return switch (modId.toLowerCase()) {
-            case "mekanism" -> mekanism;
+            case "mekanism", "mekmm", "meklg", "mekaf", "meklm" -> mekanism;
             case "techreborn", "tr" -> techreborn;
             case "ic2", "industrialcraft2" -> ic2;
             case "thermal", "thermalexpansion", "thermalfoundation", "thermalcultivation", "thermalinnovation" -> thermal;
