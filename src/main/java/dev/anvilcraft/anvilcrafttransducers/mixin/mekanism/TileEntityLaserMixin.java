@@ -1,6 +1,6 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
-import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.IMekPowerManager;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.IExternalPowerManager;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import mekanism.common.tile.laser.TileEntityBasicLaser;
@@ -40,12 +40,12 @@ public abstract class TileEntityLaserMixin extends TileEntityBasicLaser implemen
 
     @Override
     public void setGrid(@Nullable PowerGrid grid) {
-        ((IMekPowerManager) energyContainer).markPowerChange();
+        ((IExternalPowerManager) energyContainer).markPowerChange();
         this.grid = grid;
     }
 
     @Override
     public int getInputPower() {
-        return ((IMekPowerManager) energyContainer).getInputPower();
+        return ((IExternalPowerManager) energyContainer).getInputPower();
     }
 }

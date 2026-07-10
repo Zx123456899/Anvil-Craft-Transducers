@@ -1,10 +1,9 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
-import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.IMekPowerManager;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.IExternalPowerManager;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import mekanism.common.capabilities.energy.ResistiveHeaterEnergyContainer;
-import mekanism.common.capabilities.heat.BasicHeatCapacitor;
 import mekanism.common.tile.base.TileEntityMekanism;
 import mekanism.common.tile.machine.TileEntityResistiveHeater;
 import net.minecraft.core.BlockPos;
@@ -48,22 +47,19 @@ public abstract class TileEntityResistiveHeaterMixin extends TileEntityMekanism 
 
     @Override
     public void setGrid(@Nullable PowerGrid grid) {
-        ((IMekPowerManager) energyContainer).markPowerChange();
+        ((IExternalPowerManager) energyContainer).markPowerChange();
         this.grid = grid;
     }
 
     @Override
     public int getInputPower() {
-        return ((IMekPowerManager) energyContainer).getInputPower();
+        return ((IExternalPowerManager) energyContainer).getInputPower();
     }
 
-    @Inject(
-            method = "onUpdateServer",
-            at = @At("HEAD")
-    )
+    @Inject(method = "onUpdateServer", at = @At("HEAD"))
     public void anvilCraftTransducers$onUpdateServer(CallbackInfoReturnable<Boolean> cir) {
         if (!canFunction()) {
-            ((IMekPowerManager) energyContainer).setInputPower(0);
+            ((IExternalPowerManager) energyContainer).setInputPower(0);
         }
     }
 }

@@ -1,7 +1,6 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
-
-import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.IMekPowerConsumer;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.IExternalPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import mekanism.api.recipes.MekanismRecipe;
@@ -60,23 +59,15 @@ public abstract class TileEntityFactoryMixin<RECIPE extends MekanismRecipe<?>> e
         int inputPower = 0;
         for (int i = 0; i < recipeCacheLookupMonitors.length; i++) {
             FactoryRecipeCacheLookupMonitor<RECIPE> lookupMonitor = recipeCacheLookupMonitors[i];
-            if (
-                    lookupMonitor.getCachedRecipe(i) instanceof IMekPowerConsumer mekPowerConsumer
-                            && !lookupMonitor.hasNoRecipe(i)
-            ) {
-                inputPower += mekPowerConsumer.getInputPower();
+            if (lookupMonitor.getCachedRecipe(i) instanceof IExternalPowerConsumer externalPowerConsumer
+                    && !lookupMonitor.hasNoRecipe(i)) {
+                inputPower += externalPowerConsumer.getInputPower();
             }
         }
         return inputPower;
     }
 
-    @Inject(
-            method = "onUpdateServer",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lmekanism/common/tile/factory/TileEntityFactory;setActive(Z)V"
-            )
-    )
+    @Inject(method = "onUpdateServer", at = @At(value = "INVOKE", target = "Lmekanism/common/tile/factory/TileEntityFactory;setActive(Z)V"))
     public void anvilCraftTransducers$onUpdateServer(CallbackInfoReturnable<Boolean> cir) {
         if (!canFunction()) return;
         int lastActiveCount = activeCount;

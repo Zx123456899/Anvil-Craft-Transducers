@@ -1,6 +1,6 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
-import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.IMekPowerManager;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.IExternalPowerManager;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import mekanism.common.capabilities.energy.MinerEnergyContainer;
@@ -47,7 +47,7 @@ public abstract class TileEntityDigitalMinerMixin extends TileEntityMekanism imp
 
     @Override
     public void setGrid(@Nullable PowerGrid grid) {
-        ((IMekPowerManager) energyContainer).markPowerChange();
+        ((IExternalPowerManager) energyContainer).markPowerChange();
         this.grid = grid;
     }
 
@@ -58,16 +58,13 @@ public abstract class TileEntityDigitalMinerMixin extends TileEntityMekanism imp
 
     @Override
     public int getInputPower() {
-        return ((IMekPowerManager) energyContainer).getInputPower();
+        return ((IExternalPowerManager) energyContainer).getInputPower();
     }
 
-    @Inject(
-            method = "onUpdateServer",
-            at = @At("HEAD")
-    )
+    @Inject(method = "onUpdateServer", at = @At("HEAD"))
     public void anvilCraftTransducers$onUpdateServer(CallbackInfoReturnable<Boolean> cir) {
         if (!canFunction() || !getActive()) {
-            ((IMekPowerManager) energyContainer).setInputPower(0);
+            ((IExternalPowerManager) energyContainer).setInputPower(0);
         }
     }
 }

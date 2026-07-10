@@ -1,6 +1,6 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
-import dev.anvilcraft.anvilcrafttransducers.AnvilCraftTransducers;
+import dev.anvilcraft.anvilcrafttransducers.util.PowerConversionUtil;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import mekanism.common.config.MekanismConfig;
@@ -59,9 +59,8 @@ public abstract class TileEntitySPSCasingMixin extends TileEntityMultiblock<SPSM
     public int getInputPower() {
         if (this == getStructure().getController()
                 && getMultiblockData(getManager()) instanceof SPSMultiblockData SPSData
-                && SPSData.couldOperate
-        ) {
-            return (int) MekanismConfig.general.spsEnergyPerInput.get() / AnvilCraftTransducers.CONFIG.transducers;
+                && SPSData.couldOperate) {
+            return PowerConversionUtil.toKilowatts(MekanismConfig.general.spsEnergyPerInput.get(), "mekanism");
         }
         return 0;
     }

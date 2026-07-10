@@ -1,6 +1,6 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
-import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.IMekPowerManager;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.IExternalPowerManager;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import mekanism.common.capabilities.energy.MachineEnergyContainer;
@@ -51,27 +51,17 @@ public abstract class TileEntityTeleporterMixin extends TileEntityMekanism imple
 
     @Override
     public void setGrid(@Nullable PowerGrid grid) {
-        ((IMekPowerManager) energyContainer).markPowerChange();
+        ((IExternalPowerManager) energyContainer).markPowerChange();
         this.grid = grid;
     }
 
     @Override
     public int getInputPower() {
-        return ((IMekPowerManager) energyContainer).getInputPower();
+        return ((IExternalPowerManager) energyContainer).getInputPower();
     }
 
-    @Redirect(
-            method = "onUpdateServer",
-            at = @At(
-                    value = "FIELD",
-                    target = "Lmekanism/common/tile/TileEntityTeleporter;shouldRender:Z",
-                    opcode = Opcodes.PUTFIELD
-            )
-    )
+    @Redirect(method = "onUpdateServer", at = @At(value = "FIELD", target = "Lmekanism/common/tile/TileEntityTeleporter;shouldRender:Z", opcode = Opcodes.PUTFIELD))
     public void anvilCraftTransducers$setShouldRender(TileEntityTeleporter instance, boolean value) {
-        // 当状态是无能量或者就绪时，传送门的渲染转为由电网是否过载控制
-        // 此功能会导致视觉效果延迟，不知道大部分玩家是否接受
-        // 后续可能会考虑删除
         instance.shouldRender = grid != null && (status == TeleporterStatus.NOT_ENOUGH_ENERGY || status == TeleporterStatus.READY) ? grid.isWorking() : value;
     }
 }

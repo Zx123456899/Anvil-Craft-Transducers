@@ -1,10 +1,8 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
-import dev.anvilcraft.anvilcrafttransducers.AnvilCraftTransducers;
-import dev.anvilcraft.anvilcrafttransducers.mixinapi.anvilcraft.IPowerGrid;
-import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.ILaserEnergyContainer;
-import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.IMekPowerManager;
-import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.IOriginalBehavior;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.IOriginalBehavior;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.IExternalPowerManager;
+import dev.anvilcraft.anvilcrafttransducers.util.PowerConversionUtil;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import mekanism.api.Action;
@@ -24,15 +22,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BasicEnergyContainer.class)
-public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IMekPowerManager {
-    /**
-     * 发电量缓存
-     */
+public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IExternalPowerManager {
     @Unique
     private int outputPower = 0;
-    /**
-     * 用电量缓存
-     */
     @Unique
     private int inputPower = 0;
     @Unique
@@ -67,9 +59,6 @@ public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IMe
         return inputPower;
     }
 
-    /**
-     * 设备标记电力获取改变 - 只有用电设备需要
-     */
     @Override
     public void markPowerChange() {
         resetInputPower();
@@ -86,18 +75,11 @@ public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IMe
         return changePower;
     }
 
-    /**
-     * 重置用电缓存 - 设备并入电网后jade显示的视觉兼容
-     */
     private void resetInputPower() {
         TileEntityMekanism machine = getMachine();
         MachineEnergyContainer<?> machineEnergyContainer = getMachineEnergyContainer();
-        if (
-                machine != null
-                        && machineEnergyContainer != null
-                        && machine.canFunction()
-        ) {
-            setInputPower((int) (machineEnergyContainer.getEnergyPerTick() / AnvilCraftTransducers.CONFIG.transducers));
+        if (machine != null && machineEnergyContainer != null && machine.canFunction()) {
+            setInputPower(PowerConversionUtil.toKilowatts(machineEnergyContainer.getEnergyPerTick(), "mekanism"));
         } else {
             setInputPower(0);
         }
@@ -127,86 +109,58 @@ public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IMe
         return null;
     }
 
-    @Inject(
-            method = "getEnergy",
-            at = @At("RETURN")
-    )
+    private boolean isOriginalBehavior() {
+        return getMachine() instanceof IOriginalBehavior || this instanceof IOriginalBehavior;
+    }
+
+    @Inject(method = "getEnergy", at = @At("RETURN"))
     public void anvilCraftTransducers$getEnergy(CallbackInfoReturnable<Long> cir) {
-        if (getMachine() instanceof IOriginalBehavior || this instanceof IOriginalBehavior) return;
+        if (isOriginalBehavior()) return;
         PowerGrid grid = getGrid();
         if (grid != null) {
-            stored = (long) grid.getGenerate() * AnvilCraftTransducers.CONFIG.transducers;
+            stored = PowerConversionUtil.toEnergy(grid.getGenerate(), "mekanism");
         } else {
             stored = 0;
         }
     }
 
-    @Inject(
-            method = "setEnergy",
-            at = @At("RETURN"),
-            cancellable = true
-    )
+    @Inject(method = "setEnergy", at = @At("RETURN"), cancellable = true)
     public void anvilCraftTransducers$setEnergy(long energy, CallbackInfo ci) {
-        if (getMachine() instanceof IOriginalBehavior || this instanceof IOriginalBehavior) return;
+        if (isOriginalBehavior()) return;
         ci.cancel();
     }
 
-    @Inject(
-            method = "isEmpty",
-            at = @At("RETURN"),
-            cancellable = true
-    )
+    @Inject(method = "isEmpty", at = @At("RETURN"), cancellable = true)
     public void anvilCraftTransducers$isEmpty(CallbackInfoReturnable<Boolean> cir) {
-        if (getMachine() instanceof IOriginalBehavior || this instanceof IOriginalBehavior) return;
+        if (isOriginalBehavior()) return;
         cir.setReturnValue(getEnergy() == 0);
     }
 
     @Override
     public @Range(from = 0L, to = 9223372036854775807L) long getNeeded() {
-        if (getMachine() instanceof IOriginalBehavior || this instanceof IOriginalBehavior)
-            return IEnergyContainer.super.getNeeded();
+        if (isOriginalBehavior()) return IEnergyContainer.super.getNeeded();
         return 0;
     }
 
-    /**
-     * 拦截了电量输入
-     */
-    @Inject(
-            method = "insert",
-            at = @At("HEAD"),
-            cancellable = true
-    )
+    @Inject(method = "insert", at = @At("HEAD"), cancellable = true)
     public void anvilCraftTransducers$insert(long amount, Action action, AutomationType automationType, CallbackInfoReturnable<Long> cir) {
-        if (getMachine() instanceof IOriginalBehavior || this instanceof IOriginalBehavior) return;
+        if (isOriginalBehavior()) return;
         if (action.execute()) {
-            outputPower = (int) (amount / AnvilCraftTransducers.CONFIG.transducers);
+            outputPower = PowerConversionUtil.toKilowatts(amount, "mekanism");
             onContentsChanged();
         }
         cir.setReturnValue(amount);
     }
 
-    /**
-     * 拦截了电量输出
-     */
-    @Inject(
-            method = "extract",
-            at = @At("HEAD"),
-            cancellable = true
-    )
+    @Inject(method = "extract", at = @At("HEAD"), cancellable = true)
     public void anvilCraftTransducers$extract(long amount, Action action, AutomationType automationType, CallbackInfoReturnable<Long> cir) {
-        if (getMachine() instanceof IOriginalBehavior || this instanceof IOriginalBehavior) return;
-        inputPower = (int) (amount / AnvilCraftTransducers.CONFIG.transducers);
+        if (isOriginalBehavior()) return;
+        inputPower = PowerConversionUtil.toKilowatts(amount, "mekanism");
         if (action.execute()) {
             onContentsChanged();
         }
         PowerGrid grid = getGrid();
-        if (
-                grid != null
-                        && grid.isWorking()
-                        && grid instanceof IPowerGrid powerGrid
-                        && !powerGrid.canChange()
-                        && (changePower || grid.getRemaining() >= inputPower)
-        ) {
+        if (grid != null && grid.isWorking() && grid.canChange() && (changePower || grid.getRemaining() >= inputPower)) {
             cir.setReturnValue(amount);
         } else {
             cir.setReturnValue(0L);

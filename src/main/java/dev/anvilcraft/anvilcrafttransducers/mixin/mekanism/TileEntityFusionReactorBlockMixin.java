@@ -1,6 +1,6 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
-import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.IMekPowerManager;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.IExternalPowerManager;
 import dev.dubhe.anvilcraft.api.power.IPowerProducer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import mekanism.api.energy.IEnergyContainer;
@@ -61,7 +61,7 @@ public abstract class TileEntityFusionReactorBlockMixin extends TileEntityMultib
     public int getOutputPower() {
         List<IEnergyContainer> energyContainers = getMultiblock().getEnergyContainers(null);
         if (this == getStructure().getController() && !energyContainers.isEmpty()) {
-            return ((IMekPowerManager) energyContainers.getFirst()).getOutputPower();
+            return ((IExternalPowerManager) energyContainers.getFirst()).getOutputPower();
         }
         return 0;
     }
