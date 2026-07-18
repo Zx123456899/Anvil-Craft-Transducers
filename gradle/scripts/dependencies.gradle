@@ -10,8 +10,8 @@ dependencies {
     implementation(libs.anvilcraft) { transitive = false }
     interfaceInjectionData(libs.anvilcraft) { transitive = false }
 
-    // Curios API
-    implementation(libs.curios)
+    // Curios API (OctoStudios maven down, using CurseForge fallback)
+    implementation("curse.maven:curios-continuation-1037991:5888964") { transitive = false }
 
     // JEI
     compileOnlyApi(libs.jeiCommonApi) { transitive = false }
