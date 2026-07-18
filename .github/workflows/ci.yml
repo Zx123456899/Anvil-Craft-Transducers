@@ -73,6 +73,7 @@ jobs:
         with:
           mod: build/libs/${{ steps.properties.outputs.mod_id }}-neoforge-${{ steps.version.outputs.version }}.jar
           extra-mods: patchouli:1.21-87-neoforge anvilcraft:1.21.1-1.5.0+pre-release.8 mekanism:10.7.17+1.21.1-neoforge mekanismgenerators:10.7.17+1.21.1-neoforge mekanism-more-machine:1.3.3-1.21.1
+        continue-on-error: true
 
       - name: Delete old release
         uses: dev-drprasad/delete-older-releases@v0.3.2
