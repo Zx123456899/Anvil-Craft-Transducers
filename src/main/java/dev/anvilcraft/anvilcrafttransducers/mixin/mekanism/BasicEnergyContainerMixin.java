@@ -186,6 +186,7 @@ public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IEx
     public void anvilCraftTransducers$extract(long amount, Action action, AutomationType automationType, CallbackInfoReturnable<Long> cir) {
         if (isOriginalBehavior()) return;
         inputPower = PowerConversionUtil.toKilowatts(amount, "mekanism");
+        changePower = inputPower > 0;
         if (action.execute()) {
             onContentsChanged();
         }
