@@ -3,15 +3,22 @@ package dev.anvilcraft.anvilcrafttransducers.util;
 import dev.anvilcraft.anvilcrafttransducers.AddonConfig;
 
 public class PowerConversionUtil {
-    private static final AddonConfig CONFIG = AddonConfig.INSTANCE;
+    private static AddonConfig config;
+
+    private static AddonConfig getConfig() {
+        if (config == null) {
+            config = AddonConfig.INSTANCE;
+        }
+        return config;
+    }
 
     public static int toKilowatts(long energy, String modId) {
-        int factor = CONFIG.getTransducerFactor(modId);
+        int factor = getConfig().getTransducerFactor(modId);
         return (int) (energy / factor);
     }
 
     public static long toEnergy(int kilowatts, String modId) {
-        int factor = CONFIG.getTransducerFactor(modId);
+        int factor = getConfig().getTransducerFactor(modId);
         return (long) kilowatts * factor;
     }
 

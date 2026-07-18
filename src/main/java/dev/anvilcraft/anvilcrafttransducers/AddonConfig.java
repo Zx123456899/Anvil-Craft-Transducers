@@ -8,7 +8,7 @@ import java.util.Map;
 
 @Config(name = AnvilCraftTransducers.MOD_ID)
 public class AddonConfig {
-    public static final AddonConfig INSTANCE = AnvilCraftTransducers.CONFIG;
+    public static AddonConfig INSTANCE;
 
     @Comment("Mekanism: 1kW = ?J")
     public int mekanism = 200;

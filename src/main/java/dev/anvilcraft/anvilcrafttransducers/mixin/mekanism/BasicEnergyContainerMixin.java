@@ -3,6 +3,7 @@ package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 import dev.anvilcraft.anvilcrafttransducers.mixinapi.IOriginalBehavior;
 import dev.anvilcraft.anvilcrafttransducers.mixinapi.IExternalPowerManager;
 import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.ILaserEnergyContainer;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.ITileHoldingEnergyContainer;
 import dev.anvilcraft.anvilcrafttransducers.mixinapi.anvilcraft.IPowerGrid;
 import dev.anvilcraft.anvilcrafttransducers.util.PowerConversionUtil;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent;
@@ -24,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BasicEnergyContainer.class)
-public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IExternalPowerManager {
+public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IExternalPowerManager, ITileHoldingEnergyContainer {
     @Unique
     private int outputPower = 0;
     @Unique

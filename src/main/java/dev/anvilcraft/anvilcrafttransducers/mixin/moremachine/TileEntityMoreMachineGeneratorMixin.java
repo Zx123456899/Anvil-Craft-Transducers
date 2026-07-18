@@ -1,7 +1,7 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.moremachine;
 
-import dev.anvilcraft.anvilcrafttransducers.mixin.mekanism.BasicEnergyContainerMixin;
 import dev.anvilcraft.anvilcrafttransducers.mixinapi.IExternalPowerManager;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.ITileHoldingEnergyContainer;
 import dev.dubhe.anvilcraft.api.power.IPowerProducer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import mekanism.api.IContentsListener;
@@ -67,7 +67,7 @@ public abstract class TileEntityMoreMachineGeneratorMixin extends TileEntityMeka
             at = @At("RETURN")
     )
     public void anvilCraftTransducers$getInitialEnergyContainers(IContentsListener listener, CallbackInfoReturnable<IEnergyContainerHolder> cir) {
-        BasicEnergyContainerMixin mixinInstance = (BasicEnergyContainerMixin) (Object) getEnergyContainer();
-        mixinInstance.anvilCraftTransducers$setTile(this);
+        ITileHoldingEnergyContainer energyContainer = (ITileHoldingEnergyContainer) getEnergyContainer();
+        energyContainer.anvilCraftTransducers$setTile(this);
     }
 }

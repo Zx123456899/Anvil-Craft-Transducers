@@ -18,10 +18,12 @@ import org.slf4j.Logger;
 public class AnvilCraftTransducers {
     public static final String MOD_ID = "anvilcrafttransducers";
     public static final Logger LOGGER = LogUtils.getLogger();
-    public static final AddonConfig CONFIG = ConfigManager.register(AnvilCraftTransducers.MOD_ID, AddonConfig::new);
+    public static AddonConfig CONFIG;
     public static final Registrate REGISTRATE = Registrate.create(MOD_ID);
 
     public AnvilCraftTransducers(@NotNull IEventBus modEventBus, @NotNull ModContainer modContainer) {
+        CONFIG = ConfigManager.register(MOD_ID, AddonConfig::new);
+        AddonConfig.INSTANCE = CONFIG;
 //        AddonItemGroups.register(modEventBus);
 //        AddonBlocks.register();
 //        AddonItems.register();
