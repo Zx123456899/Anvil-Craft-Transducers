@@ -80,6 +80,13 @@ ordering = "NONE"
 side = "BOTH"
 
 [[dependencies."${mod_id}"]]
+modId = "anvillib"
+type = "required"
+versionRange = "[1.4.0,)"
+ordering = "BEFORE"
+side = "BOTH"
+
+[[dependencies."${mod_id}"]]
 modId = "mekanism"
 type = "required"
 versionRange = "[10.7.17,)"
