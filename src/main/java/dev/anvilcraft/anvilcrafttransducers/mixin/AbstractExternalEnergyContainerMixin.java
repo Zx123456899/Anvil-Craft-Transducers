@@ -2,6 +2,7 @@ package dev.anvilcraft.anvilcrafttransducers.mixin;
 
 import dev.anvilcraft.anvilcrafttransducers.mixinapi.IOriginalBehavior;
 import dev.anvilcraft.anvilcrafttransducers.mixinapi.IExternalPowerManager;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.anvilcraft.IPowerGrid;
 import dev.anvilcraft.anvilcrafttransducers.util.PowerConversionUtil;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
@@ -108,7 +109,7 @@ public abstract class AbstractExternalEnergyContainerMixin implements IExternalP
         inputPower = PowerConversionUtil.toKilowatts(amount, modId);
         onContentsChanged();
         PowerGrid grid = getGrid();
-        if (grid != null && grid.isWorking() && !grid.canChange() && (changePower || grid.getRemaining() >= inputPower)) {
+        if (grid != null && grid.isWorking() && !((IPowerGrid) grid).canChange() && (changePower || grid.getRemaining() >= inputPower)) {
             return amount;
         }
         return 0;

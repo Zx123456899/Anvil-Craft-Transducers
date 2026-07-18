@@ -1,5 +1,6 @@
 package dev.anvilcraft.anvilcrafttransducers.mixin.moremachine;
 
+import dev.anvilcraft.anvilcrafttransducers.mixin.mekanism.BasicEnergyContainerMixin;
 import dev.anvilcraft.anvilcrafttransducers.mixinapi.IExternalPowerManager;
 import dev.dubhe.anvilcraft.api.power.IPowerProducer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;

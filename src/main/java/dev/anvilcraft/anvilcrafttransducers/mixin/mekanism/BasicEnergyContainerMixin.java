@@ -2,6 +2,8 @@ package dev.anvilcraft.anvilcrafttransducers.mixin.mekanism;
 
 import dev.anvilcraft.anvilcrafttransducers.mixinapi.IOriginalBehavior;
 import dev.anvilcraft.anvilcrafttransducers.mixinapi.IExternalPowerManager;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.ILaserEnergyContainer;
+import dev.anvilcraft.anvilcrafttransducers.mixinapi.anvilcraft.IPowerGrid;
 import dev.anvilcraft.anvilcrafttransducers.util.PowerConversionUtil;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
@@ -174,7 +176,7 @@ public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IEx
             onContentsChanged();
         }
         PowerGrid grid = getGrid();
-        if (grid != null && grid.isWorking() && grid.canChange() && (changePower || grid.getRemaining() >= inputPower)) {
+        if (grid != null && grid.isWorking() && ((IPowerGrid) grid).canChange() && (changePower || grid.getRemaining() >= inputPower)) {
             cir.setReturnValue(amount);
         } else {
             cir.setReturnValue(0L);
