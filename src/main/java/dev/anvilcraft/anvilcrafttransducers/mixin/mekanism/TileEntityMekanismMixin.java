@@ -19,8 +19,8 @@ public abstract class TileEntityMekanismMixin extends BlockEntity {
         super(type, pos, state);
     }
 
-    @Inject(method = "onLoad", at = @At("RETURN"))
-    public void anvilCraftTransducers$onLoad(CallbackInfo ci) {
+    @Inject(method = "clearRemoved", at = @At("RETURN"))
+    public void anvilCraftTransducers$clearRemoved(CallbackInfo ci) {
         if (this instanceof IPowerComponent component && level != null && !level.isClientSide) {
             PowerGrid.addComponent(component);
         }
