@@ -1,5 +1,6 @@
 package dev.anvilcraft.anvilcrafttransducers.util;
 
+import dev.anvilcraft.anvilcrafttransducers.AnvilCraftTransducers;
 import dev.anvilcraft.anvilcrafttransducers.AddonConfig;
 
 public class PowerConversionUtil {
@@ -7,7 +8,7 @@ public class PowerConversionUtil {
 
     private static AddonConfig getConfig() {
         if (config == null) {
-            config = AddonConfig.INSTANCE;
+            config = AnvilCraftTransducers.CONFIG;
         }
         return config;
     }

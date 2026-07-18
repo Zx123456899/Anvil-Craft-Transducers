@@ -3,12 +3,8 @@ package dev.anvilcraft.anvilcrafttransducers;
 import dev.anvilcraft.lib.config.Comment;
 import dev.anvilcraft.lib.config.Config;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Config(name = AnvilCraftTransducers.MOD_ID)
 public class AddonConfig {
-    public static AddonConfig INSTANCE;
 
     @Comment("Mekanism: 1kW = ?J")
     public int mekanism = 200;

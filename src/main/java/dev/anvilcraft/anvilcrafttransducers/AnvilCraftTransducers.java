@@ -23,7 +23,6 @@ public class AnvilCraftTransducers {
 
     public AnvilCraftTransducers(@NotNull IEventBus modEventBus, @NotNull ModContainer modContainer) {
         CONFIG = ConfigManager.register(MOD_ID, AddonConfig::new);
-        AddonConfig.INSTANCE = CONFIG;
 //        AddonItemGroups.register(modEventBus);
 //        AddonBlocks.register();
 //        AddonItems.register();
