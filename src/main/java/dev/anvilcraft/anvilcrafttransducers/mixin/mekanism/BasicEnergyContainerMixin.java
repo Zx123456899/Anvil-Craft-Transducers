@@ -190,7 +190,7 @@ public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IEx
             onContentsChanged();
         }
         PowerGrid grid = getGrid();
-        if (grid != null && grid.isWorking() && ((IPowerGrid) grid).canChange() && (changePower || grid.getRemaining() >= inputPower)) {
+        if (grid != null && grid.isWorking() && !((IPowerGrid) grid).canChange() && (changePower || grid.getRemaining() >= inputPower)) {
             cir.setReturnValue(amount);
         } else {
             cir.setReturnValue(0L);
