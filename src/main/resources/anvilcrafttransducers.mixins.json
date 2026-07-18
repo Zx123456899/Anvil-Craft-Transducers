@@ -15,6 +15,7 @@
     "mekanism.SPSMultiblockDataMixin",
     "mekanism.TileEntityChargepadMixin",
     "mekanism.TileEntityDigitalMinerMixin",
+    "mekanism.TileEntityMekanismMixin",
     "mekanism.TileEntityDimensionalStabilizerMixin",
     "mekanism.TileEntityElectricPumpMixin",
     "mekanism.TileEntityFactoryMixin",
