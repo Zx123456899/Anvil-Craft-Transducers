@@ -7,6 +7,7 @@ import dev.anvilcraft.anvilcrafttransducers.mixinapi.mekanism.ITileHoldingEnergy
 import dev.anvilcraft.anvilcrafttransducers.mixinapi.anvilcraft.IPowerGrid;
 import dev.anvilcraft.anvilcrafttransducers.util.PowerConversionUtil;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent;
+import dev.dubhe.anvilcraft.api.power.IPowerProducer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import mekanism.api.Action;
 import mekanism.api.AutomationType;
@@ -130,14 +131,21 @@ public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IEx
         return getMachine() instanceof IOriginalBehavior || this instanceof IOriginalBehavior;
     }
 
-    @Inject(method = "getEnergy", at = @At("RETURN"))
+    @Inject(method = "getEnergy", at = @At("RETURN"), cancellable = true)
     public void anvilCraftTransducers$getEnergy(CallbackInfoReturnable<Long> cir) {
         if (isOriginalBehavior()) return;
+        TileEntityMekanism machine = getMachine();
+        // 发电机：返回0，让发电机认为容器是空的，从而持续发电
+        if (machine instanceof IPowerProducer) {
+            cir.setReturnValue(0L);
+            return;
+        }
+        // 消耗器：返回电网总发电量，让消耗器认为有足够能量运行
         PowerGrid grid = getGrid();
         if (grid != null) {
-            stored = PowerConversionUtil.toEnergy(grid.getGenerate(), "mekanism");
+            cir.setReturnValue(PowerConversionUtil.toEnergy(grid.getGenerate(), "mekanism"));
         } else {
-            stored = 0;
+            cir.setReturnValue(0L);
         }
     }
 
@@ -156,6 +164,11 @@ public abstract class BasicEnergyContainerMixin implements IEnergyContainer, IEx
     @Override
     public @Range(from = 0L, to = 9223372036854775807L) long getNeeded() {
         if (isOriginalBehavior()) return IEnergyContainer.super.getNeeded();
+        // 发电机：总是需要能量（让发电机持续发电）
+        if (getMachine() instanceof IPowerProducer) {
+            return Long.MAX_VALUE;
+        }
+        // 消耗器：不需要存储能量（从电网实时获取）
         return 0;
     }
 
