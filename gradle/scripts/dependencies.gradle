@@ -29,7 +29,7 @@ dependencies {
     implementation("mekanism:Mekanism:${mekanism_version}:generators") { transitive = false }
     accessCompileOnly(("mekanism:Mekanism:${mekanism_version}"))
 
-    // Mekanism-MoreMachine (via CurseMaven)
-    implementation("curse.maven:mekanism-more-machine-1275257:7019511") { transitive = false }
-    runtimeOnly("curse.maven:mekanism-more-machine-1275257:7019511") { transitive = false }
+    // Mekanism-MoreMachine (via CurseMaven, v1.3.3)
+    implementation("curse.maven:mekanism-more-machine-1275257:7919872") { transitive = false }
+    runtimeOnly("curse.maven:mekanism-more-machine-1275257:7919872") { transitive = false }
 }
