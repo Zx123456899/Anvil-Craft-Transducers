@@ -84,14 +84,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         continue-on-error: true
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Create Release and Upload Asset
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.version.outputs.version }}
-          release_name: ${{ steps.version.outputs.version }}
+          name: ${{ steps.version.outputs.version }}
           body: |
             ## Changelog
 
@@ -104,13 +103,5 @@ jobs:
             见下方附件下载最新版本。
           draft: false
           prerelease: false
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build/libs/${{ steps.properties.outputs.mod_id }}-neoforge-${{ steps.version.outputs.version }}.jar
-          asset_name: ${{ steps.properties.outputs.mod_id }}-neoforge-${{ steps.version.outputs.version }}.jar
-          asset_content_type: application/java-archive
+          files: |
+            build/libs/${{ steps.properties.outputs.mod_id }}-neoforge-${{ steps.version.outputs.version }}.jar
